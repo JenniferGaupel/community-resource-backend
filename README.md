@@ -1,2 +1,2 @@
 # community-resource-backend
-Python flask API with postgres database for connecting mutual aid resources
+Python flask API with postgres database for connecting mutual aid resources. Utilizes docker containers
