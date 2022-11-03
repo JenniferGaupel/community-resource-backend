@@ -12,8 +12,16 @@ class ResourceGroups(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     resource_name = db.Column(db.String(), unique=True, nullable=False)
     resource_description = db.Column(db.String())
-    business_address = db.Column(db.String())
-    physical_address = db.Column(db.String())
+    business_address_1 = db.Column(db.String())
+    business_address_2 = db.Column(db.String())
+    business_city = db.Column(db.String())
+    business_state = db.Column(db.String())
+    business_zip_code = db.Column(db.String())
+    physical_address_1 = db.Column(db.String())
+    physical_address_2 = db.Column(db.String())
+    physical_city = db.Column(db.String())
+    physical_state = db.Column(db.String())
+    physical_zip_code = db.Column(db.String())    
     website = db.Column(db.String())
     phone_number = db.Column(db.String())
     email = db.Column(db.String())
@@ -29,6 +37,7 @@ class ResourceGroups(db.Model):
     how_to_donate_resources = db.Column(db.String())   
     notes_for_receiver = db.Column(db.String())   
     notes_for_donator = db.Column(db.String())   
+    approved = db.Column(db.Boolean, default=False, nullable=False)    
     created_at = db.Column(db.DateTime, default=datetime.now())
     updated_at = db.Column(db.DateTime, onupdate=datetime.now())
     resource_group_types = db.relationship('GroupResourceTypes', backref="resource_groups")
@@ -63,30 +72,3 @@ class GroupResourceTypes(db.Model):
 
     def __repr__(self) -> str:
         return 'GroupResourceTypes: {self.id}'        
-
-
-
-class SubmittedResources(db.Model):
-    __tablename__ = "submitted_resources"
-    id = db.Column(db.Integer, primary_key=True)
-    resource_name = db.Column(db.String(), unique=True, nullable=False)
-    resource_description = db.Column(db.String())
-    business_address = db.Column(db.String())
-    physical_address = db.Column(db.String())
-    website = db.Column(db.String())
-    phone_number = db.Column(db.String())
-    email = db.Column(db.String())
-    instagram = db.Column(db.String())
-    twitter = db.Column(db.String())
-    facebook = db.Column(db.String())
-    vanmo = db.Column(db.String())
-    paypal = db.Column(db.String())
-    cash_app = db.Column(db.String())
-    zelle = db.Column(db.String())
-    additional_contacts = db.Column(db.String())
-    entered_to_resource_group = db.Column(db.Boolean, default=False)    
-    created_at = db.Column(db.DateTime, default=datetime.now())
-    updated_at = db.Column(db.DateTime, onupdate=datetime.now())
-
-    def __repr__(self) -> str:
-        return 'SubmittedResource: {self.resource_name}'

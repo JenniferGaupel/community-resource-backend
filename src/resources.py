@@ -1,8 +1,34 @@
 from flask import Blueprint, request, jsonify
+from database import ResourceGroups, ResourceTypes, GroupResourceTypes, db
 
-resources = Blueprint("resources", __name__, url_prefix="/api/v1/bookmarks")
+resources = Blueprint("resources", __name__, url_prefix="/api/v1/resources")
 
 # / route - GET - will return a paginated list of all resources
+@resources.get("/")
+def get_all_resources():
+    resource_groups_query = ResourceGroups.query.all()
+
+    resource_groups = []
+
+    for resource_group in resource_groups_query.items:
+        location = resource_group.physical_city + ", " + resource_group.physical_state
+        main_resources_query = GroupResourceTypes.query.join(ResourceTypes).filter(GroupResourceTypes.resource_group_id == resource_group.id and ResourceTypes.main_resource_type == True).all()
+        
+        main_resources = []
+        for main_resource in main_resources_query.items:
+            main_resources.append({main_resource.resource_type_name})
+
+        resource_groups.append({
+            'id': resource_group.id,
+            'name': resource_group.resource_name,
+            'description': resource_group.resource_description,
+            'main_resources': main_resources,
+            'location': location,
+            'created_at': resource_group.created_at,
+            'updated_at': resource_group.updated_at
+        })
+
+    return jsonify({'resource_groups': resource_groups}), 200
 
 # /{id} route - GET - will return details of a specific resource by id
 
