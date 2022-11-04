@@ -50,9 +50,6 @@ class ResourceTypes(db.Model):
     __tablename__ = "resource_types"
     id = db.Column(db.Integer, primary_key=True)
     resource_type_name = db.Column(db.String(80), unique=True, nullable=False)
-    resource_type_description = db.Column(db.String())
-    main_resource_type = db.Column(db.Boolean, default=True, nullable=False)
-    detailed_resource_type = db.Column(db.Boolean, default=True, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now())
     updated_at = db.Column(db.DateTime, onupdate=datetime.now())
     resource_group_types = db.relationship('GroupResourceTypes', backref="resource_types")
@@ -64,9 +61,7 @@ class GroupResourceTypes(db.Model):
     __tablename__ = "group_resource_types"
     id = db.Column(db.Integer, primary_key=True)
     resource_group_id = db.Column(db.Integer, db.ForeignKey('resource_groups.id'), nullable=False)
-    resource_type_id = db.Column(db.Integer, db.ForeignKey('resource_types.id'), nullable=False)
-    available = db.Column(db.Boolean, default=True)
-    needed = db.Column(db.Boolean, default=False)    
+    resource_type_id = db.Column(db.Integer, db.ForeignKey('resource_types.id'), nullable=False)   
     created_at = db.Column(db.DateTime, default=datetime.now())
     updated_at = db.Column(db.DateTime, onupdate=datetime.now())
 

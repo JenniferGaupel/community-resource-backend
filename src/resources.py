@@ -10,13 +10,20 @@ def get_all_resources():
 
     resource_groups = []
 
-    for resource_group in resource_groups_query.items:
-        location = resource_group.physical_city + ", " + resource_group.physical_state
-        main_resources_query = GroupResourceTypes.query.join(ResourceTypes).filter(GroupResourceTypes.resource_group_id == resource_group.id and ResourceTypes.main_resource_type == True).all()
+    for resource_group in resource_groups_query:
+        if(resource_group.physical_city != None and resource_group.physical_state != None):
+            location = resource_group.physical_city + ", " + resource_group.physical_state
+        elif(resource_group.business_city != None and resource_group.business_state != None):
+            location = resource_group.business_city + ", " + resource_group.business_state
+        else:
+            location = "Area Unknown"
+        #main_resources_query = GroupResourceTypes.query.join(ResourceTypes).filter(GroupResourceTypes.resource_group_id == resource_group.id).all()
+        main_resources_query = ResourceTypes.query.join(GroupResourceTypes).filter(GroupResourceTypes.resource_group_id == resource_group.id).all()
+
         
-        main_resources = []
-        for main_resource in main_resources_query.items:
-            main_resources.append({main_resource.resource_type_name})
+        main_resources = ""
+        for main_resource in main_resources_query:            
+            main_resources += main_resource.resource_type_name + ", "
 
         resource_groups.append({
             'id': resource_group.id,
