@@ -6,7 +6,7 @@ resources = Blueprint("resources", __name__, url_prefix="/api/v1/resources")
 # / route - GET - will return a paginated list of all resources
 @resources.get("/")
 def get_all_resources():
-    resource_groups_query = ResourceGroups.query.all()
+    resource_groups_query = ResourceGroups.query.filter(ResourceGroups.approved == True).all()
 
     resource_groups = []
 
@@ -17,9 +17,8 @@ def get_all_resources():
             location = resource_group.business_city + ", " + resource_group.business_state
         else:
             location = "Area Unknown"
-        #main_resources_query = GroupResourceTypes.query.join(ResourceTypes).filter(GroupResourceTypes.resource_group_id == resource_group.id).all()
-        main_resources_query = ResourceTypes.query.join(GroupResourceTypes).filter(GroupResourceTypes.resource_group_id == resource_group.id).all()
 
+        main_resources_query = ResourceTypes.query.join(GroupResourceTypes).filter(GroupResourceTypes.resource_group_id == resource_group.id).all()
         
         main_resources = ""
         for main_resource in main_resources_query:            
@@ -38,6 +37,14 @@ def get_all_resources():
     return jsonify({'resource_groups': resource_groups}), 200
 
 # /{id} route - GET - will return details of a specific resource by id
+@resources.get('/<int:id>')
+def get_resource(id):
+    resource_groups_query = ResourceGroups.query.filter(ResourceGroups.id == id).first()
+
+    if not resource_groups_query:
+        return jsonify({'Message': "Item not found"}), 404
+    else:
+        
 
 # /search?{searchparams}{serachtype} - GET - returns a list of resources based on the type of search - name, resrouce type, address
 
