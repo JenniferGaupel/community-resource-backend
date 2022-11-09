@@ -28,7 +28,7 @@ class ResourceGroups(db.Model):
     instagram = db.Column(db.String())
     twitter = db.Column(db.String())
     facebook = db.Column(db.String())
-    vanmo = db.Column(db.String())
+    venmo = db.Column(db.String())
     paypal = db.Column(db.String())
     cash_app = db.Column(db.String())
     zelle = db.Column(db.String())    
