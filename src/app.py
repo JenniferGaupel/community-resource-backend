@@ -1,6 +1,7 @@
-from flask import Flask, request, jsonify
-from database import db, ResourceGroups
-from resources import resources
+from flask import Flask
+from database import db
+from resource_groups import resource_groups
+from resource_types import resource_types
 import os
 # from seed_data import resource_type_list, group_resource_type_list
 app = Flask(__name__)
@@ -12,7 +13,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 db.app = app
 db.init_app(app) 
 
-app.register_blueprint(resources)
+app.register_blueprint(resource_groups)
+app.register_blueprint(resource_types)
 
 # db.session.add_all(group_resource_type_list)
 # db.session.commit()

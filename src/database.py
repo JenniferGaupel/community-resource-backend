@@ -40,6 +40,7 @@ class ResourceGroups(db.Model):
     approved = db.Column(db.Boolean, default=False, nullable=False)    
     created_at = db.Column(db.DateTime, default=datetime.now())
     updated_at = db.Column(db.DateTime, onupdate=datetime.now())
+    unapproved_resource_list = db.Column(db.String())       
     resource_group_types = db.relationship('GroupResourceTypes', backref="resource_groups")
 
     def __repr__(self) -> str:
