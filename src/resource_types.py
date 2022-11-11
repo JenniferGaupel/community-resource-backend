@@ -62,18 +62,6 @@ def create_resource_type():
                 'Message': "Resource group "  + new_resource_type.resource_type_name + " created"
             }), 201    
 
-
-# edit resource type
-# @resource_types.put('/<int:id>')
-# @resource_types.patch('/<int:id>')
-# def edit_resource_type(id):
-#     resource_type = ResourceTypes.query.filter(ResourceTypes.id == id).first()
-
-#     if resource_type == None:
-#         return jsonify({'Message': "Resource type not found"}), 404
-#     else:
-
-
 # delete resource type
 @resource_types.delete('/<int:id>')
 def delete_resource_type(id):

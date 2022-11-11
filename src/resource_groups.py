@@ -98,10 +98,8 @@ def get_resource_types_by_resource_group(id):
 
         return jsonify({'resource_types': resource_types}), 200
 # /search?{searchparams}{serachtype} - GET - returns a list of resources based on the type of search - name, resource type, address
-@resource_groups.get('/search/<string:param>')
-def resource_group_search(param):
-    
-
+# @resource_groups.get('/search/<string:param>')
+# def resource_group_search(param):
 
 
 # / POST - creates a new resource submissiion, returns a status back to user to decide what to display to front end
@@ -134,10 +132,6 @@ def create_resource_group():
                 'Message': "Resource group "  + new_resource_group.resource_name + " created"
             }), 201
 
-# endpoint for resource group edit
-# @resource_groups.put('/<int:id>')
-# @resource_groups.patch('/<int:id>')
-
 # endpoint for resource delete        
 @resource_groups.delete('/<int:id>')
 def delete_resource_group(id):
@@ -158,7 +152,6 @@ def delete_resource_group(id):
 
     else:
         return jsonify({'message': "Resource group not found"}), 404
-
 
 # endpoint for admin GET of all unapproved resources 
 @resource_groups.get('/unapproved')
@@ -220,8 +213,21 @@ def approve_resource_group(id):
     elif resource_group.approved == True:
         return jsonify({'Message': "Resource group is already approved"}), 409
     else:
+        body = request.get_json()
+
+        for resource_type in body['resource_types']:
+            resource_type_query = ResourceTypes.query.filter(ResourceTypes.id == resource_type.id).first()
+            if resource_type_query == None:
+                return jsonify({'Message': "Resource type " +  resource_type.resource_type_name + " not found"}), 404
+            else:
+                group_resource_Type = GroupResourceTypes(
+                    resource_group_id = id, resource_type_id = resource_type.id
+                )
+
+                db.session.add(group_resource_Type)
+                db.session.commit()
+                
         resource_group.approved = True
-        # need to match up the resource types
         db.session.commit()
         
         return jsonify({'Message': "Resource group " + resource_group.resource_name + " has been approved"}), 200
