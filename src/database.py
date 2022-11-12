@@ -1,11 +1,7 @@
-from enum import unique
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-import string
-import random
 
 db = SQLAlchemy()
-
 
 class ResourceGroups(db.Model):
     __tablename__ = "resource_groups"
@@ -45,7 +41,6 @@ class ResourceGroups(db.Model):
 
     def __repr__(self) -> str:
         return 'ResourceGroups: {self.resource_name}'
-
 
 class ResourceTypes(db.Model):
     __tablename__ = "resource_types"

@@ -3,7 +3,6 @@ from database import ResourceTypes, GroupResourceTypes, db
 
 resource_types = Blueprint("resource_types", __name__, url_prefix="/api/v1/resource-types")
 
-# endpoint for viewing all resource types
 @resource_types.get('/')
 def get_all_resource_types():
     resource_types_query = ResourceTypes.query.all()
@@ -23,9 +22,8 @@ def get_all_resource_types():
 
         return jsonify({'resource_types': resource_types}), 200    
 
-# view single resource type
 @resource_types.get('/<int:id>')
-def get_resource_type():
+def get_resource_type(id):
     resource_type = ResourceTypes.query.filter(ResourceTypes.id == id).first()
 
     if resource_type == None:
@@ -38,7 +36,6 @@ def get_resource_type():
             'updated_at': resource_type.updated_at,
         }), 200
 
-# new resource type
 @resource_types.post('/')
 def create_resource_type():
     body = request.get_json()
@@ -62,7 +59,6 @@ def create_resource_type():
                 'Message': "Resource group "  + new_resource_type.resource_type_name + " created"
             }), 201    
 
-# delete resource type
 @resource_types.delete('/<int:id>')
 def delete_resource_type(id):
     group_resource_type_query = GroupResourceTypes.query.filter(GroupResourceTypes.resource_type_id == id).all()

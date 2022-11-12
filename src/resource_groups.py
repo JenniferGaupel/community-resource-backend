@@ -3,7 +3,6 @@ from database import ResourceGroups, ResourceTypes, GroupResourceTypes, db
 
 resource_groups = Blueprint("resource_groups", __name__, url_prefix="/api/v1/resource-groups")
 
-# / route - GET - will return a paginated list of all resources
 @resource_groups.get('/')
 def get_all_approved_resources():
     resource_groups_query = ResourceGroups.query.filter(ResourceGroups.approved == True).all()
@@ -39,7 +38,6 @@ def get_all_approved_resources():
 
         return jsonify({'resource_groups': resource_groups}), 200
 
-# /{id} route - GET - will return details of a specific resource by id
 @resource_groups.get('/<int:id>')
 def get_single_resource(id):
     resource_group = ResourceGroups.query.filter(ResourceGroups.id == id and ResourceGroups.approved == True).first()
@@ -80,7 +78,6 @@ def get_single_resource(id):
             'updated_at': resource_group.updated_at
         }), 200 
 
-# /{id}/additional route - GET - gets the list of resources types available for this specific resource group
 @resource_groups.get('/<int:id>/resource-types')
 def get_resource_types_by_resource_group(id):
     resource_group_types = ResourceTypes.query.join(GroupResourceTypes).filter(GroupResourceTypes.resource_group_id == id).all()
@@ -97,12 +94,11 @@ def get_resource_types_by_resource_group(id):
 
 
         return jsonify({'resource_types': resource_types}), 200
+
 # /search?{searchparams}{serachtype} - GET - returns a list of resources based on the type of search - name, resource type, address
 # @resource_groups.get('/search/<string:param>')
 # def resource_group_search(param):
 
-
-# / POST - creates a new resource submissiion, returns a status back to user to decide what to display to front end
 @resource_groups.post('/')
 def create_resource_group():
     body = request.get_json()
@@ -132,7 +128,6 @@ def create_resource_group():
                 'Message': "Resource group "  + new_resource_group.resource_name + " created"
             }), 201
 
-# endpoint for resource delete        
 @resource_groups.delete('/<int:id>')
 def delete_resource_group(id):
     group_resource_type_query = GroupResourceTypes.query.filter(GroupResourceTypes.resource_group_id == id).all()
@@ -153,7 +148,6 @@ def delete_resource_group(id):
     else:
         return jsonify({'message': "Resource group not found"}), 404
 
-# endpoint for admin GET of all unapproved resources 
 @resource_groups.get('/unapproved')
 def get_unapproved_resources():
     resource_groups_query = ResourceGroups.query.filter(ResourceGroups.approved == False).all()
@@ -197,12 +191,11 @@ def get_unapproved_resources():
                 'approved': resource_group.approved,
                 'created_at': resource_group.created_at,
                 'updated_at': resource_group.updated_at,
-                'unapproved_resource_list': resource_group.unapproved_resource_lists
+                'unapproved_resource_list': resource_group.unapproved_resource_list
             })
 
         return jsonify({'resource_groups': resource_groups}), 200
 
-# endpoint to mark an unapproved resource as approved. This will flip the switch from unapproved to approved and will create the link between resources types and resource groups
 @resource_groups.put('/<int:id>/approve')
 @resource_groups.patch('/<int:id>/approve')
 def approve_resource_group(id):
