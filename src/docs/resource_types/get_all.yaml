@@ -1,0 +1,12 @@
+
+Get all resource types
+---
+tags:
+  - Resource Types
+
+responses:
+  200:
+    description: All resource types
+  
+  404:
+    description: No resource types were found

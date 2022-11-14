@@ -1,0 +1,97 @@
+Create a new resource group
+---
+tags:
+  - Resource Groups
+
+parameters:
+  - name: body
+    description: The body should contain the new resource type name
+    in: body
+    required: true
+    schema:
+      type: object
+      required:
+        - "resource_name"
+      properties:
+        resource_name:
+          type: "string"
+          example: "Cincy City Help"
+        resource_description:
+          type: "string"
+          example: "Provides help to Cincinnati"      
+        business_address_1:
+          type: "string"
+          example: "123 Example Street"      
+        business_address_2:
+          type: "string"
+          example: "Suite 100"            
+        business_city:
+          type: "string"
+          example: "Cincinnati"            
+        business_state:
+          type: "string"
+          example: "OH"            
+        business_zip_code:
+          type: "string"
+          example: "45202"
+        physical_address_1:
+          type: "string"
+          example: "123 Park Place"      
+        physical_address_2:
+          type: "string"
+          example: "Lot 5"      
+        physical_city:
+          type: "string"
+          example: "Cincinnati"      
+        physical_state:
+          type: "string"
+          example: "OH"      
+        physical_zip_code:
+          type: "string"
+          example: "45202"      
+        website:
+          type: "string"
+          example: "www.example.com"      
+        phone_number:
+          type: "string"
+          example: "513-513-5135"      
+        email:
+          type: "string"
+          example: "sample@example.com"        
+        instagram:
+          type: "string"
+          example: "exampleinstahandle"      
+        twitter:
+          type: "string"
+          example: "exampletwitterhandle"      
+        facebook:
+          type: "string"
+          example: "Facebook Sample Name"      
+        venmo:
+          type: "string"
+          example: "example-venmo-handle"      
+        paypal:
+          type: "string"
+          example: "Paypal Example Name"      
+        cash_app:
+          type: "string"
+          example: "Cashapp Example Handle"      
+        zelle:
+          type: "string"
+          example: "Zelle Example Handle"      
+        additional_contacts:
+          type: "string"
+          example: "Linkedin.com/sampleresourcegroup, text 555-555-5555"      
+        unapproved_resource_list:
+          type: "string"
+          example: "Food, Shelter, Clothes"      
+
+responses:
+  201:
+    description: New resource group successfully created
+
+  400:
+    description: Fails to create resource group due to missing resource group name
+
+  409:
+    description: Fails to create resource group because resource group name already exists   

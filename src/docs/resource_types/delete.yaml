@@ -1,0 +1,17 @@
+Delete a single resource type
+---
+tags:
+  - Resource Types
+
+parameters:
+  - in: query
+    description: The id of the resource type to be deleted  
+    name: id
+    required: true    
+
+responses:
+  204:
+    description: Reource type and associated group resource type records deleted
+  
+  404:
+    description: Resource type not found for resource type id

@@ -1,0 +1,28 @@
+Create a new resource type
+---
+tags:
+  - Resource Types
+
+parameters:
+  - name: body
+    description: The body should contain the new resource type name
+    in: body
+    required: true
+    schema:
+      type: object
+      required:
+        - "resource_type_name"
+      properties:
+        resource_type_name:
+          type: "string"
+          example: "Food"
+
+responses:
+  201:
+    description: New resource type successfully created
+
+  400:
+    description: Fails to create resource type due to missing resource type name
+
+  409:
+    description: Fails to create resource type because resource type name already exists   

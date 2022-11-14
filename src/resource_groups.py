@@ -1,9 +1,11 @@
 from flask import Blueprint, request, jsonify
+from flasgger import swag_from
 from database import ResourceGroups, ResourceTypes, GroupResourceTypes, db
 
 resource_groups = Blueprint("resource_groups", __name__, url_prefix="/api/v1/resource-groups")
 
 @resource_groups.get('/')
+@swag_from('./docs/resource_groups/get_all_approved.yaml')
 def get_all_approved_resources():
     resource_groups_query = ResourceGroups.query.filter(ResourceGroups.approved == True).all()
 
@@ -31,20 +33,24 @@ def get_all_approved_resources():
                 'resource_name': resource_group.resource_name,
                 'resource_description': resource_group.resource_description,
                 'main_resources': main_resources,
-                'location': location,
-                'created_at': resource_group.created_at,
-                'updated_at': resource_group.updated_at
+                'location': location
             })
 
         return jsonify({'resource_groups': resource_groups}), 200
 
 @resource_groups.get('/<int:id>')
+@swag_from('./docs/resource_groups/get_single.yaml')
 def get_single_resource(id):
-    resource_group = ResourceGroups.query.filter(ResourceGroups.id == id and ResourceGroups.approved == True).first()
+    resource_group = ResourceGroups.query.filter(ResourceGroups.id == id).first()
 
     if not resource_group:
         return jsonify({'Message': "Resource group was not found"}), 404
     else:
+        resource_types_query = ResourceTypes.query.join(GroupResourceTypes).filter(GroupResourceTypes.resource_group_id == resource_group.id).all()
+        
+        resource_types = ""
+        for resource_type in resource_types_query:            
+            resource_types += resource_type.resource_type_name + ", "        
         return jsonify({
             'id': resource_group.id,
             'resource_name': resource_group.resource_name,
@@ -74,11 +80,13 @@ def get_single_resource(id):
             'how_to_donate_resources': resource_group.how_to_donate_resources,
             'notes_for_receiver': resource_group.notes_for_receiver,
             'notes_for_donator': resource_group.notes_for_donator,
+            'resource_types': resource_types,
             'created_at': resource_group.created_at,
             'updated_at': resource_group.updated_at
         }), 200 
 
 @resource_groups.get('/<int:id>/resource-types')
+@swag_from('./docs/resource_groups/get_single.yaml')
 def get_resource_types_by_resource_group(id):
     resource_group_types = ResourceTypes.query.join(GroupResourceTypes).filter(GroupResourceTypes.resource_group_id == id).all()
     
@@ -100,6 +108,7 @@ def get_resource_types_by_resource_group(id):
 # def resource_group_search(param):
 
 @resource_groups.post('/')
+@swag_from('./docs/resource_groups/create.yaml')
 def create_resource_group():
     body = request.get_json()
 

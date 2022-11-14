@@ -1,0 +1,17 @@
+Get a single resource type
+---
+tags:
+  - Resource Types
+
+parameters:
+  - in: query
+    description: The id of the resource type to retrieve  
+    name: id
+    required: true    
+
+responses:
+  200:
+    description: Details of single resource type
+  
+  404:
+    description: Resource type not found for resource type id

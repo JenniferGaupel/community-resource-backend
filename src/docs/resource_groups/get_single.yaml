@@ -1,0 +1,17 @@
+Get a single resource group
+---
+tags:
+  - Resource Groups
+
+parameters:
+  - in: query
+    description: The id of the resource group to retrieve  
+    name: id
+    required: true    
+
+responses:
+  200:
+    description: Details of single resource group, including associated resource types
+  
+  404:
+    description: Resource group not found for resource group id

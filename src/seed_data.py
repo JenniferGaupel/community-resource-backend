@@ -6,6 +6,8 @@ from database import ResourceGroups, ResourceTypes, GroupResourceTypes, db
 #cincyccs
 #covunityfridge
 #jens test with all fields filled out
+#shelterhousecincy.org
+
 
 # triiibe_foundation = ResourceGroups(resource_name="Triiibe Foundation", resource_description="Provide positive representation of urban culture through growth, community, and creativity.",
 #     business_address_1="PO Box 14723", business_city="Cincinnati", business_state="OH", business_zip_code="45250", website="https://www.triiibefoundation.org/", email="info@triiibefoundation.org",

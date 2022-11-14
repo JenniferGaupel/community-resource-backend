@@ -1,9 +1,11 @@
 from flask import Blueprint, request, jsonify
+from flasgger import swag_from
 from database import ResourceTypes, GroupResourceTypes, db
 
 resource_types = Blueprint("resource_types", __name__, url_prefix="/api/v1/resource-types")
 
 @resource_types.get('/')
+@swag_from('./docs/resource_types/get_all.yaml')
 def get_all_resource_types():
     resource_types_query = ResourceTypes.query.all()
 
@@ -23,6 +25,7 @@ def get_all_resource_types():
         return jsonify({'resource_types': resource_types}), 200    
 
 @resource_types.get('/<int:id>')
+@swag_from('./docs/resource_types/get_single.yaml')
 def get_resource_type(id):
     resource_type = ResourceTypes.query.filter(ResourceTypes.id == id).first()
 
@@ -37,6 +40,7 @@ def get_resource_type(id):
         }), 200
 
 @resource_types.post('/')
+@swag_from('./docs/resource_types/create.yaml')
 def create_resource_type():
     body = request.get_json()
 
@@ -60,6 +64,7 @@ def create_resource_type():
             }), 201    
 
 @resource_types.delete('/<int:id>')
+@swag_from('./docs/resource_types/delete.yaml')
 def delete_resource_type(id):
     group_resource_type_query = GroupResourceTypes.query.filter(GroupResourceTypes.resource_type_id == id).all()
 

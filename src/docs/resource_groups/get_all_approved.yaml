@@ -1,0 +1,31 @@
+Get all resource types marked as approved
+---
+tags:
+  - Resource Groups
+
+responses:
+  200:
+    description: All approved resource 
+    # content:
+    #   application/json:
+    #     schema:
+    #       type: object
+    #       properties:
+    #         id:
+    #           type: integer
+    #           description: ID of the resource group
+    #         resource_name:
+    #           type: string
+    #           description: Name of the resource group
+    #         resource_description:
+    #           type: string
+    #           description: Description of the resource group
+    #         main_resources:
+    #           type: string
+    #           description: Resources types associated with this resource group
+    #         location:
+    #           type: string
+    #           description: City and State, if known, of the resource group
+  
+  404:
+    description: No resource groups were found
