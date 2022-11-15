@@ -1,0 +1,20 @@
+Update a resource group to mark it as approved and create the link between the resource group and it's resource types
+---
+tags:
+  - Resource Groups
+
+parameters:
+  - in: query
+    description: The id of the resource to be updated  
+    name: id
+    required: true    
+
+responses:
+  200:
+    description: Updated the resource group to be approved and created the record in the intermediate table to link the resource types
+  
+  404:
+    description: Resource group not found for resource group id, or resource type id to be associated with the resource group was not found
+
+  409:
+    description: Resource group has already been approved

@@ -5,13 +5,11 @@ tags:
 
 parameters:
   - name: body
-    description: The body should contain the new resource type name
+    description: The body must contain the new resource type name
     in: body
     required: true
     schema:
       type: object
-      required:
-        - "resource_name"
       properties:
         resource_name:
           type: "string"

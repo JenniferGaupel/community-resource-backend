@@ -103,9 +103,18 @@ def get_resource_types_by_resource_group(id):
 
         return jsonify({'resource_types': resource_types}), 200
 
-# /search?{searchparams}{serachtype} - GET - returns a list of resources based on the type of search - name, resource type, address
-# @resource_groups.get('/search/<string:param>')
-# def resource_group_search(param):
+# @resource_groups.get('/search/<string:search_value>/<string:search_type>')
+# def resource_group_search(search_value, search_type):
+#     # trim & check the search value
+    
+#     if search_type == "name":
+#         # resource type
+#     elif search_type == "resource-type":
+#         # resource type
+#     elif search_type == "address":
+#         # resource address for all areas
+#     else:
+#         # return error
 
 @resource_groups.post('/')
 @swag_from('./docs/resource_groups/create.yaml')
@@ -138,6 +147,7 @@ def create_resource_group():
             }), 201
 
 @resource_groups.delete('/<int:id>')
+@swag_from('./docs/resource_groups/delete.yaml')
 def delete_resource_group(id):
     group_resource_type_query = GroupResourceTypes.query.filter(GroupResourceTypes.resource_group_id == id).all()
 
@@ -158,6 +168,7 @@ def delete_resource_group(id):
         return jsonify({'message': "Resource group not found"}), 404
 
 @resource_groups.get('/unapproved')
+@swag_from('./docs/resource_groups/get_all_unapproved.yaml')
 def get_unapproved_resources():
     resource_groups_query = ResourceGroups.query.filter(ResourceGroups.approved == False).all()
 

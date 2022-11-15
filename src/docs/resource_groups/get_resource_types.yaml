@@ -12,11 +12,6 @@ parameters:
 responses:
   200:
     description: All resource types associated with a single resource group
-    # content:
-    #   application/json:
-    #     schema:
-    #       type: object
-    #       properties:
 
   404:
     description: Resource group not found for resource group id

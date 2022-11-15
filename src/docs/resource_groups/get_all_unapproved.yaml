@@ -1,11 +1,11 @@
-Get all resource types marked as approved
+Get all resource types not marked as approved
 ---
 tags:
   - Resource Groups
 
 responses:
   200:
-    description: All approved resource groups
+    description: All not approved resource groups
   
   404:
     description: No resource groups were found
