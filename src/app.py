@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_cors import CORS
 from flasgger import Swagger
 from database import db
 from resource_groups import resource_groups
@@ -7,6 +8,7 @@ import os
 from config.swagger import template, swagger_config
 
 app = Flask(__name__)
+CORS(app)
 
 if __name__ == '__main__':
     app.run(debug=True)
