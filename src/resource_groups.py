@@ -121,7 +121,7 @@ def get_resource_types_by_resource_group(id):
 def create_resource_group():
     body = request.get_json()
 
-    if body['resource_name'] == None or body['resource_name' == '']:
+    if [body['resource_name'] == None] or [body['resource_name'] == ""]:
         return jsonify({'Message': "Resource name is required"}), 400
     else:
         check_resource_name = ResourceGroups.query.filter(ResourceGroups.resource_name == body['resource_name']).first()
