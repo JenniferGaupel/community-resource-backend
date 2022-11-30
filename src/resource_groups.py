@@ -120,14 +120,16 @@ def get_resource_types_by_resource_group(id):
 @swag_from('./docs/resource_groups/create.yaml')
 def create_resource_group():
     body = request.get_json()
-
-    if [body['resource_name'] == None] or [body['resource_name'] == ""]:
-        return jsonify({'Message': "Resource name is required"}), 400
+    new_resource_name = body['resource_name']
+    
+    if new_resource_name == None or new_resource_name == "":
+        return jsonify({'Message': new_resource_name}), 400
     else:
-        check_resource_name = ResourceGroups.query.filter(ResourceGroups.resource_name == body['resource_name']).first()
-
-        if check_resource_name != None:
-            return jsonify({'Message': "Resource group name already exists"}), 409
+        # check_resource_name = ResourceGroups.query.filter_by(resource_name = new_resource_name).first()
+        check_resource_name = db.session.query(ResourceGroups).filter(ResourceGroups.resource_name == new_resource_name)
+        
+        if check_resource_name:
+            return jsonify({'Message': "Resource group with that name already exists"}), 409
         else:
             new_resource_group =ResourceGroups(
                 resource_name = body['resource_name'], resource_description = body['resource_description'], business_address_1 = body['business_address_1'], 
