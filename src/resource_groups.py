@@ -1,6 +1,7 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, current_app
 from flasgger import swag_from
 from database import ResourceGroups, ResourceTypes, GroupResourceTypes, db
+import json
 
 resource_groups = Blueprint("resource_groups", __name__, url_prefix="/api/v1/resource-groups")
 
@@ -120,32 +121,39 @@ def get_resource_types_by_resource_group(id):
 @swag_from('./docs/resource_groups/create.yaml')
 def create_resource_group():
     body = request.get_json()
+    # double check my resourcegroups body is okay before I start commiting to the database
+
     new_resource_name = body['resource_name']
+    rg = ResourceGroups(**body)
+    current_app.logger.error("test!!")
+    current_app.logger.error(body)
+
+
     
     if new_resource_name == None or new_resource_name == "":
         return jsonify({'Message': new_resource_name}), 400
     else:
-        # check_resource_name = ResourceGroups.query.filter_by(resource_name = new_resource_name).first()
+        check_resource_name = ResourceGroups.query.filter_by(resource_name = new_resource_name).first()
         check_resource_name = db.session.query(ResourceGroups).filter(ResourceGroups.resource_name == new_resource_name)
         
         if check_resource_name:
             return jsonify({'Message': "Resource group with that name already exists"}), 409
         else:
-            new_resource_group =ResourceGroups(
-                resource_name = body['resource_name'], resource_description = body['resource_description'], business_address_1 = body['business_address_1'], 
-                business_address_2 = body['business_address_2'], business_city = body['business_city'], business_state = body['business_state'], 
-                business_zip_code = body['business_zip_code'], physical_address_1 = body['physical_address_1'], physical_address_2 = body['physical_address_2'], 
-                physical_city = body['physical_city'], physical_state = body['physical_state'], physical_zip_code = body['physical_zip_code'], 
-                website = body['website'], phone_number = body['phone_number'], email = body['email'], instagram = body['instagram'], twitter = body['twitter'], 
-                facebook = body['facebook'], venmo = body['venmo'], paypal = body['paypal'], cash_app = body['cash_app'], zelle = body['zelle'], 
-                additional_contacts = body['additional_contacts'], unapproved_resource_list = body['unapproved_resource_list']
-            ) 
-            db.session.add(new_resource_group)
+            # new_resource_group = ResourceGroups(
+            #     resource_name = body['resource_name'], resource_description = body['resource_description'], business_address_1 = body['business_address_1'], 
+            #     business_address_2 = body['business_address_2'], business_city = body['business_city'], business_state = body['business_state'], 
+            #     business_zip_code = body['business_zip_code'], physical_address_1 = body['physical_address_1'], physical_address_2 = body['physical_address_2'], 
+            #     physical_city = body['physical_city'], physical_state = body['physical_state'], physical_zip_code = body['physical_zip_code'], 
+            #     website = body['website'], phone_number = body['phone_number'], email = body['email'], instagram = body['instagram'], twitter = body['twitter'], 
+            #     facebook = body['facebook'], venmo = body['venmo'], paypal = body['paypal'], cash_app = body['cash_app'], zelle = body['zelle'], 
+            #     additional_contacts = body['additional_contacts'], unapproved_resource_list = body['unapproved_resource_list']
+            # ) 
+            # db.session.add(new_resource_group)
 
-            db.session.commit()
+            # db.session.commit()
             
             return jsonify({
-                'Message': "Resource group "  + new_resource_group.resource_name + " created"
+                'Message': "Resource group " + new_resource_name + " created"
             }), 201
 
 @resource_groups.delete('/<int:id>')
