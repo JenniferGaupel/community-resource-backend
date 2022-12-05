@@ -3,3 +3,5 @@ psycopg2-binary
 Flask-SQLAlchemy
 flasgger
 flask-cors
+flask-marshmallow
+marshmallow-sqlalchemy

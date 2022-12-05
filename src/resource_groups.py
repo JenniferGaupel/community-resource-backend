@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify, current_app
 from flasgger import swag_from
-from database import ResourceGroups, ResourceTypes, GroupResourceTypes, db
+from database import ResourceGroups, ResourceTypes, GroupResourceTypes, db, ResourceGroupsSchema
 import json
 
 resource_groups = Blueprint("resource_groups", __name__, url_prefix="/api/v1/resource-groups")
@@ -120,41 +120,23 @@ def get_resource_types_by_resource_group(id):
 @resource_groups.post('/submit-resource')
 @swag_from('./docs/resource_groups/create.yaml')
 def create_resource_group():
-    body = request.get_json()
-    # double check my resourcegroups body is okay before I start commiting to the database
-
-    new_resource_name = body['resource_name']
-    rg = ResourceGroups(**body)
-    current_app.logger.error("test!!")
-    current_app.logger.error(body)
-
-
+    new_resource_name = request.get_json()['resource_name']
     
     if new_resource_name == None or new_resource_name == "":
-        return jsonify({'Message': new_resource_name}), 400
+        return jsonify({'Message': "Resource name is required"}), 400
     else:
         check_resource_name = ResourceGroups.query.filter_by(resource_name = new_resource_name).first()
-        check_resource_name = db.session.query(ResourceGroups).filter(ResourceGroups.resource_name == new_resource_name)
         
         if check_resource_name:
-            return jsonify({'Message': "Resource group with that name already exists"}), 409
+            return jsonify({'Message': "Resource group with name " + check_resource_name.resource_name + " already exists"}), 409
         else:
-            # new_resource_group = ResourceGroups(
-            #     resource_name = body['resource_name'], resource_description = body['resource_description'], business_address_1 = body['business_address_1'], 
-            #     business_address_2 = body['business_address_2'], business_city = body['business_city'], business_state = body['business_state'], 
-            #     business_zip_code = body['business_zip_code'], physical_address_1 = body['physical_address_1'], physical_address_2 = body['physical_address_2'], 
-            #     physical_city = body['physical_city'], physical_state = body['physical_state'], physical_zip_code = body['physical_zip_code'], 
-            #     website = body['website'], phone_number = body['phone_number'], email = body['email'], instagram = body['instagram'], twitter = body['twitter'], 
-            #     facebook = body['facebook'], venmo = body['venmo'], paypal = body['paypal'], cash_app = body['cash_app'], zelle = body['zelle'], 
-            #     additional_contacts = body['additional_contacts'], unapproved_resource_list = body['unapproved_resource_list']
-            # ) 
-            # db.session.add(new_resource_group)
-
-            # db.session.commit()
+            rg_schema = ResourceGroupsSchema()
+            new_rg = rg_schema.load(request.get_json(), session=db.session)
             
-            return jsonify({
-                'Message': "Resource group " + new_resource_name + " created"
-            }), 201
+            db.session.add(new_rg)
+            db.session.commit()
+            
+            return rg_schema.dump(new_rg), 201            
 
 @resource_groups.delete('/<int:id>')
 @swag_from('./docs/resource_groups/delete.yaml')
@@ -236,19 +218,19 @@ def approve_resource_group(id):
     elif resource_group.approved == True:
         return jsonify({'Message': "Resource group is already approved"}), 409
     else:
-        body = request.get_json()
+        # body = request.get_json()
 
-        for resource_type in body['resource_types']:
-            resource_type_query = ResourceTypes.query.filter(ResourceTypes.id == resource_type.id).first()
-            if resource_type_query == None:
-                return jsonify({'Message': "Resource type " +  resource_type.resource_type_name + " not found"}), 404
-            else:
-                group_resource_Type = GroupResourceTypes(
-                    resource_group_id = id, resource_type_id = resource_type.id
-                )
+        # for resource_type in body['resource_types']:
+        #     resource_type_query = ResourceTypes.query.filter(ResourceTypes.id == resource_type.id).first()
+        #     if resource_type_query == None:
+        #         return jsonify({'Message': "Resource type " +  resource_type.resource_type_name + " not found"}), 404
+        #     else:
+        #         group_resource_Type = GroupResourceTypes(
+        #             resource_group_id = id, resource_type_id = resource_type.id
+        #         )
 
-                db.session.add(group_resource_Type)
-                db.session.commit()
+        #         db.session.add(group_resource_Type)
+        #         db.session.commit()
                 
         resource_group.approved = True
         db.session.commit()

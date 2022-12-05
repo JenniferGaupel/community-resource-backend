@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 from datetime import datetime
 
 db = SQLAlchemy()
@@ -63,3 +64,21 @@ class GroupResourceTypes(db.Model):
 
     def __repr__(self) -> str:
         return 'GroupResourceTypes: {self.id}'        
+
+class ResourceGroupsSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = ResourceGroups
+        include_fk = True
+        load_instance = True  
+
+class ResourceTypesSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = ResourceTypes
+        include_fk = True
+        load_instance = True
+
+class GroupResourceTypesSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = GroupResourceTypes
+        include_relationships = True
+        load_instance = True        
