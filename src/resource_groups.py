@@ -9,7 +9,7 @@ resource_groups = Blueprint("resource_groups", __name__, url_prefix="/api/v1/res
 @swag_from('./docs/resource_groups/get_all_approved.yaml')
 def get_all_approved_resources():
     resource_groups_query = ResourceGroups.query.filter(ResourceGroups.approved == True).all()
-
+    
     if not resource_groups_query:
         return jsonify({'Message': "No resource groups were found"}), 404
     else:
