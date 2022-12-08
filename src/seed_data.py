@@ -1,4 +1,4 @@
-from database import ResourceGroups, ResourceTypes, GroupResourceTypes, db
+from app import ResourceGroups, ResourceTypes, GroupResourceTypes, db
 
 #triiibefoundation##
 #cincinnatiforjustice
