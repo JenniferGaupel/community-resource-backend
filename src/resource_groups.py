@@ -8,20 +8,14 @@ resource_groups = Blueprint("resource_groups", __name__, url_prefix="/api/v1/res
 @resource_groups.get('/')
 @swag_from('./docs/resource_groups/get_all_approved.yaml')
 def get_all_approved_resources():
-
-    # getting the page number from the front end. Default to page 1 if they don't provide page number 
-    page = request.args.get('page', 1, type=int)
-    # get the per_page from the front end. Default to 10 per page if they don't provide records per page
-    per_page = request.args.get('per_page', 10, type=int)
-
-    resource_groups_query = ResourceGroups.query.filter(ResourceGroups.approved == True).paginate(page=page, per_page=per_page)
+    resource_groups_query = ResourceGroups.query.filter(ResourceGroups.approved == True).all()
     
     if not resource_groups_query:
         return jsonify({'Message': "No resource groups were found"}), 404
     else:
         resource_groups = []
 
-        for resource_group in resource_groups_query.items:
+        for resource_group in resource_groups_query:
             if(resource_group.physical_city != None and resource_group.physical_state != None):
                 location = resource_group.physical_city + ", " + resource_group.physical_state
             elif(resource_group.business_city != None and resource_group.business_state != None):
@@ -43,18 +37,7 @@ def get_all_approved_resources():
                 'location': location
             })
 
-        meta = {
-            'page': resource_groups_query.page,
-            'pages': resource_groups_query.pages,
-            'total_count': resource_groups_query.total,
-            'prev_page': resource_groups_query.prev_num,
-            'next_page': resource_groups_query.next_num,
-            'has_next': resource_groups_query.has_next,
-            'has_prev': resource_groups_query.has_prev,      
-            'per_page': resource_groups_query.per_page,
-        }
-
-        return jsonify({'resource_groups': resource_groups, 'meta': meta}), 200
+        return jsonify({'resource_groups': resource_groups}), 200
 
 @resource_groups.get('/<int:id>')
 @swag_from('./docs/resource_groups/get_single.yaml')
